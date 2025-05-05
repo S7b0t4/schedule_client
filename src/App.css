@@ -1,0 +1,30 @@
+:root {
+	--seccond: green;
+	--bg-color: white;
+	--text-color: black;
+}
+
+#root {
+	width: 100dvw;
+}
+
+[data-them="dark"] {
+	--seccond: green;
+	--bg-color: black;
+	--text-color: white;
+}
+
+body {
+	background: var(--bg-color);
+	color: var(--text-color);
+	transition: background 0.3s, color 0.3s;
+}
+
+a {
+	color: white;
+	text-decoration: none;
+}
+
+.plug {
+	margin-bottom: 30px;
+}

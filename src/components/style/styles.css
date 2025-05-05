@@ -1,0 +1,141 @@
+.page {
+	max-width: 1600px;
+	width: calc(100% - 10px);
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	padding: 5px;
+}
+
+.page_row {
+	display: flex;
+	justify-content: space-between;
+}
+
+.form_lawout {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: calc(100dvh - 200px);
+	width: 700px;
+}
+
+.row_form {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.row_form_text {
+	color: var(--text-color);
+	transition: background 0.3s, color 0.3s;
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin: 0 auto;
+}
+
+form input {
+	padding: 8px;
+	border-radius: 8px;
+}
+
+form button {
+	border: 0;
+	padding: 8px;
+	border-radius: 8px;
+	background: green;
+}
+
+form input {
+	color: black;
+}
+
+.list button {
+	border: 0;
+	padding: 8px;
+	border-radius: 8px;
+}
+
+.list {
+	gap: 0;
+	display: flex;
+	padding: 0;
+	flex-direction: column;
+}
+
+.list li {
+	padding: 8px;
+	border-bottom: 1px solid var(--text-color);
+}
+
+.list li:last-child {
+	border-bottom: 0;
+}
+
+.list_lawout {
+	width: 50%;
+}
+
+.list_button_delete {
+	border: 0;
+	background: #b75757;
+}
+
+.list_button_delete img {
+	width: 15px;
+}
+
+.list_button_change {
+	border: 0;
+	background: gray;
+}
+
+.list_button_change img {
+	width: 15px;
+}
+
+.list_row {
+	justify-content: space-between;
+	display: flex;
+	gap: 5px;
+	color: var(--text-color);
+	transition: background 0.3s, color 0.3s;
+}
+
+.list_row_buttons {
+	display: flex;
+	gap: 8px
+}
+
+.list_row_text {
+	padding: 8px;
+	display: flex;
+	gap: 6px;
+}
+
+.row_buttons {
+	display: flex;
+	gap: 8px;
+}
+
+.row_button_cancel {
+	background: gray;
+}
+
+@media(max-width: 1440px) {
+	.page_row {
+		flex-direction: column;
+	}
+
+	.list_lawout {
+		width: calc(100% - 10px);
+	}
+
+	.form_lawout {
+		width: calc(100% - 10px);
+	}
+}

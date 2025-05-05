@@ -1,0 +1,35 @@
+nav {
+	height: 50px;
+	justify-content: space-between;
+	display: flex;
+	position: fixed;
+	max-width: 100dvw;
+	padding: 0 5px;
+	width: calc(100% - 10px);
+	margin: 0 auto;
+	top: 0px;
+	z-index: 3;
+	background: var(--bg-color);
+}
+
+nav button {
+	border: 0;
+	background: var(--bg-color);
+	color: var(--text-color);
+	transition: background 0.3s, color 0.3s;
+	cursor: pointer;
+}
+
+ul {
+	list-style: none;
+	display: flex;
+	gap: 10px;
+}
+
+.nav_link {
+	color: var(--text-color);
+}
+
+.active {
+	color: var(--seccond);
+}
