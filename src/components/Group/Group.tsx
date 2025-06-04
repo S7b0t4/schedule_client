@@ -95,7 +95,7 @@ const Group = () => {
 
 	return (
 		<div className='page'>
-			<h1>Группа</h1>
+			<h1>Группы</h1>
 			<div className='page_row'>
 				<div className='list_lawout'>
 					<ul className='list'>

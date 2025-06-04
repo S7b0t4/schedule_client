@@ -42,6 +42,26 @@ export interface IData {
 	regard: string,
 	startDate: Date,
 	endDate: Date,
+	subject: SubjectI,
+	teacher: TeacherI,
+	auditorium: AuditoriumI
+}
+
+export interface SubjectI {
+	title: string,
+	id: number
+}
+
+export interface TeacherI {
+	name: string,
+	surname: string,
+	patronymic: string,
+	id: number
+}
+
+export interface AuditoriumI {
+	number: number,
+	id: number
 }
 
 export interface objects {

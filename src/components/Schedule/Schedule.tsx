@@ -1,15 +1,17 @@
 import "./Schedule.css"
 import axios from 'axios'
 import { useEffect, useState } from "react";
-import DatePicker from "react-datepicker";
+import DatePicker, { registerLocale } from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css'
 import ScheduleTable from "./ScheduleTable";
 import { IAuditorium, IData, IGroups, ISubject, ITeacher, selectGroupI, selectLessonI, selectSubjectI } from "./type";
-
+import { ru } from 'date-fns/locale/ru';
+registerLocale('ru', ru)
 
 const Schedule = () => {
 	const [selectDate, setSelectDate] = useState<Date>(new Date());
 	const [time, setTime] = useState([["09:00", "10:20"], ["10:30", "11:50"], ["12:30", "13:50"], ["14:00", "15:20"], ["15:30", "16:50"]]);
+	const [smallDay, setSmallDay] = useState<boolean>(false);
 	const [period, setPeriod] = useState<[Date, Date][]>([]);
 	const [data, setData] = useState<IData[]>([]);
 	const [groups, setGroups] = useState<IGroups[]>([]);
@@ -22,8 +24,12 @@ const Schedule = () => {
 	const [selectSubject, setSelectSubject] = useState<number>(0);
 	const [selectTeacher, setSelectTeacher] = useState<number>(0);
 	const [selectAuditorium, setSelectAuditorium] = useState<number>(0);
+	const [selectLesson, setSelectLesson] = useState<IData | null>(null);
 	const [update, setUpdate] = useState<boolean>(false);
+	const [exist, setExist] = useState<boolean>(false);
+	const [selectId, setSelectId] = useState<number>(0);
 	const server_url: string | undefined = process.env.REACT_APP_SERVER;
+	registerLocale('ru', ru)
 
 	const ChangeTime = (time: Date, timeString: string) => {
 		const [hours, minutes] = timeString.split(':').map(Number);
@@ -87,8 +93,30 @@ const Schedule = () => {
 			.then((val) => { setAuditorium(val.data) })
 			.catch((err) => { console.log(err) })
 	}
+	const handleSaveAsExcel = async () => {
+		await axios.post(server_url + '/schedule/save_by_date', selectDate)
+			.then((val) => { console.log(val.data) })
+			.catch((err) => { console.log(err) })
+	}
+
+	const handleChangeLesson = (val: IData | null) => {
+		if (val) {
+			setSelectId(val.id);
+			setExist(true);
+			setSelectGroup(val?.group_id || 0);
+			const periodIndex = period.findIndex(time => formatTime(time[0]) == formatTime([new Date(val?.startDate), new Date(val?.endDate)][0]))
+			setSelectTime(periodIndex);
+			setSelectSubject(val.subject_id);
+			setSelectTeacher(val.teacher_id);
+			setSelectAuditorium(val.auditorium_id);
+		} else {
+			setExist(false)
+		}
+	}
+
 	useEffect(() => {
 		getData(selectDate);
+		setUpdate(!update)
 		convertTime();
 	}, [selectDate])
 
@@ -99,6 +127,10 @@ const Schedule = () => {
 		getAuditorium();
 		convertTime();
 	}, [])
+
+	useEffect(() => {
+		convertTime();
+	}, [time])
 
 	const handleChangeGroup = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		setSelectGroup(Number(event.target.value))
@@ -121,8 +153,12 @@ const Schedule = () => {
 	}
 
 	const handleSelectLesson = (val: selectLessonI) => {
+		setSelectTeacher(0);
+		setSelectAuditorium(0);
+		setSelectSubject(0);
 		setSelectGroup(val.id)
 		setSelectTime(val.time)
+		setExist(false)
 	}
 
 	const handleSelectGroup = (val: selectGroupI) => {
@@ -167,6 +203,7 @@ const Schedule = () => {
 					.then((e) => {
 						form.reset();
 						setUpdate(!update)
+						getData(selectDate);
 						clearForm();
 					})
 					.catch((e) => { console.log(e) });
@@ -176,20 +213,49 @@ const Schedule = () => {
 		}
 	}
 
+	const handlerDelete = (e: any) => {
+		e.preventDefault();
+		try {
+			axios.delete(server_url + "/schedule/delete", { params: { id: selectId } })
+				.then((e) => {
+					setUpdate(!update)
+					getData(selectDate);
+					clearForm();
+					setExist(false)
+				})
+				.catch((e) => { console.log(e) });
+		} catch (err) {
+			console.log(err)
+		}
+	}
+
+	const handlerDayType = () => {
+		setSmallDay(!smallDay)
+		if (smallDay) {
+			setTime([["09:00", "10:10"], ["10:20", "11:30"], ["11:40", "12:50"], ["13:00", "14:10"], ["14:20", "15:40"]])
+		} else {
+			setTime([["09:00", "10:20"], ["10:30", "11:50"], ["12:30", "13:50"], ["14:00", "15:20"], ["15:30", "16:50"]])
+		}
+		convertTime()
+	}
+
 	return (
 		<div className='schedule_page'>
 			<h1>Раcписания</h1>
+			<div className='schedule_type_row'>
+				<button onClick={handlerDayType}>{smallDay ? 'Короткие' : 'Будни'}</button>
+			</div>
 			<div className='schedule_page_row'>
 				<div className='main-part'>
-					<ScheduleTable update={update} data={data} selectGroup={selectGroup} selectTime={selectTime} handleSelectGroup={(val) => handleSelectGroup(val)} handleSelectLesson={(val) => handleSelectLesson(val)} formatTime={(val) => formatTime(val)} setOpenTime={(index) => setOpenTime(index)} period={period} groups={groups}></ScheduleTable>
+					<ScheduleTable selectDate={selectDate} handleChangeLesson={(val: IData | null) => { handleChangeLesson(val) }} update={update} data={data} selectGroup={selectGroup} selectTime={selectTime} handleSelectGroup={(val) => handleSelectGroup(val)} handleSelectLesson={(val) => handleSelectLesson(val)} formatTime={(val) => formatTime(val)} setOpenTime={(index) => setOpenTime(index)} period={period} groups={groups}></ScheduleTable>
 					<div className='save_row'>
 						<DatePicker
 							selected={selectDate}
 							onChange={(date) => { setSelectDate(date || new Date()) }}
+							locale="ru"
 							dateFormat="dd-MM-yyyy"
 						/>
-						<button>Сохранить</button>
-						<button>Сохранить как Excel</button>
+						<button onClick={handleSaveAsExcel}>Сохранить как Excel</button>
 					</div>
 				</div>
 				<div className='extra-part'>
@@ -242,7 +308,10 @@ const Schedule = () => {
 						<label>
 							<input placeholder="уведомление" name='regard' />
 						</label>
-						<button>Сохранить</button>
+						<div className="button_row">
+							<button type="submit" className={exist ? 'exist' : ''}>{exist ? 'Измениь' : 'Сохранить'}</button>
+							{exist && <button onClick={handlerDelete} className="delete">Удалить</button>}
+						</div>
 					</form>
 				</div>
 			</div>

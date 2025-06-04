@@ -74,7 +74,6 @@ const Teacher = () => {
 	}
 
 	const deleteObject = async (index: { id: number }) => {
-		console.log({ params: index })
 		try {
 			await axios.delete(server_url + '/teacher/delete', { params: index });
 			objectList();
@@ -95,7 +94,7 @@ const Teacher = () => {
 
 	return (
 		<div className='page'>
-			<h1>Преподователь</h1>
+			<h1>Преподаватели</h1>
 			<div className='page_row'>
 				<div className='list_lawout'>
 					<ul className='list'>

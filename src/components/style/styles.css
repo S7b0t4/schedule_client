@@ -47,7 +47,14 @@ form button {
 	border: 0;
 	padding: 8px;
 	border-radius: 8px;
-	background: green;
+	background: var(--seccond);
+}
+
+.schedule_type_row button {
+	border: 0;
+	padding: 8px;
+	border-radius: 8px;
+	background: var(--seccond);
 }
 
 form input {

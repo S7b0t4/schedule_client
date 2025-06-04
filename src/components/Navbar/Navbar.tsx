@@ -19,10 +19,10 @@ const Navbar = () => {
 		<nav>
 			<ul>
 				<li><NavLink className={({ isActive }) => (isActive ? 'active nav_link' : 'nav_link')} to='/schedule'>Расписания</NavLink></li>
-				<li><NavLink className={({ isActive }) => (isActive ? 'active nav_link' : 'nav_link')} to='/teacher'>Преподователи</NavLink></li>
+				<li><NavLink className={({ isActive }) => (isActive ? 'active nav_link' : 'nav_link')} to='/teacher'>Преподаватели</NavLink></li>
 				<li><NavLink className={({ isActive }) => (isActive ? 'active nav_link' : 'nav_link')} to='/subject'>Предметы</NavLink></li>
 				<li><NavLink className={({ isActive }) => (isActive ? 'active nav_link' : 'nav_link')} to='/auditorium'>Кабинеты</NavLink></li>
-				<li><NavLink className={({ isActive }) => (isActive ? 'active nav_link' : 'nav_link')} to='/group'>Группа</NavLink></li>
+				<li><NavLink className={({ isActive }) => (isActive ? 'active nav_link' : 'nav_link')} to='/group'>Группы</NavLink></li>
 			</ul>
 			<button onClick={toggleTheme}>them</button>
 		</nav>
